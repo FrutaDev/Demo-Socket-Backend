@@ -14,6 +14,7 @@ exports.getProducts = async (req, res) => {
 
     try {
         const { rows, count } = await Product.findAndCountAll({
+            attributes: ["id", "name", "price", "stock"],
             limit: parsedLimit,
             offset: offset,
             order: [["id", "DESC"]]
@@ -42,7 +43,12 @@ exports.createProduct = async (req, res) => {
     try {
         const product = await Product.create({ name, price, stock });
         // io.emit("product:created", product);
-        res.status(201).json({ product });
+        res.status(201).json({
+            ok: true,
+            code: "CREATE_SUCCESSFUL",
+            message: "Producto creado correctamente",
+            product: product
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({
