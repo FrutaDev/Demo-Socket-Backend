@@ -61,8 +61,14 @@ exports.updateProduct = async (req, res) => {
 
     try {
         const product = await Product.update({ name, price, stock }, { where: { id } });
+        console.log("👽👽👽", product);
         // io.emit("product:updated", product);
-        res.status(200).json({ product });
+        res.status(200).json({
+            ok: true,
+            code: "UPDATE_SUCCESSFUL",
+            message: "Producto actualizado correctamente",
+            product: product
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -93,6 +99,23 @@ exports.deleteProduct = async (req, res) => {
             ok: false,
             code: "INTERNAL_SERVER_ERROR",
             message: "Error al eliminar el producto",
+        });
+    }
+};
+
+exports.getProductById = async (req, res) => {
+    console.log("Entrando a get Product By Id");
+    const { id } = req.params;
+
+    try {
+        const product = await Product.findByPk(id);
+        res.status(200).json({ product });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok: false,
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Error al obtener el producto",
         });
     }
 };
